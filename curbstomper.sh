@@ -72,7 +72,7 @@ sysctl --system
 echo Sysctl has been configured.
 
 sleep 30
-printf 'y'| sudo apt remove maltego
+printf 'y' |sudo apt remove maltego
 printf 'y' |sudo apt remove msfpc
 printf 'y' |sudo apt remove set
 printf 'y' |sudo apt remove faraday 
