@@ -2,7 +2,8 @@
 
 #turn on firewall
 sudo ufw enable
-
+#auto updates
+dpkg-reconfigure --priority=low unattended-upgrades 
 # remove netcat (a backdoor to machine)
 sudo apt-get autoremove --purge -y netcat-traditional
 sudo apt-get autoremove --purge -y netcat-openbsd
@@ -215,12 +216,14 @@ journalctl | grep “Execute Disable”
 find /home -iname “*.txt” -print > EverybodyTextFiles.txt
 find /home -iname “*.pdf” -print > EverybodyPDFFiles.txt
 find /home -iname “*.docx” -print > EverybodyDocFiles.txt
+find / -type d \( -perm -g+w -or -perm -o+w \) -exec ls -adl {} \; >> WriteableFiles.txt
+
 
 dpkg -l > packagelist.txt
 echo /etc/systemd/system >> SystemServices.txt
 
-apt-get update
-#apt-get upgrade
+
+
 
 echo “check your document folder for more info”
 mkdir /home/backups
@@ -281,14 +284,18 @@ mkdir /home/backups
 
 #apt-get install lightdm
 
-#sleep 60
+sleep 15
+echo "check permissions on config files of crit services"
+sleep 5
+echo "look at notes and githubs to properly config files"
+sleep 5
+echo "config firefox with HTTPS only and block malicious downloads"
+sleep 5
+echo "look in EverybodyTextFiles, EverybodyPDFFiles, EveryBodyDocFiles, SystemServices, WriteableFiles, and packagelist for any missed items"
+sleep 5
+echo "take pictures and notes of every score"
+
+#apt-get upgrade
 
 #echo allow-guest=false >> /etc/lightdm/users.conf
 #echo greeter-show-remote-login=false >> /etc/lightdm/users.conf
-
-
-		
-		
-		
-		
-
