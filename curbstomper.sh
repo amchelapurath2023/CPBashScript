@@ -38,13 +38,13 @@ find . -iname "*.aac" ! -path "*/run/*" -delete
 # File Permissions 
 
 chmod 740 /root/.bash_history
-echo Bash history set
+echo "Bash history set"
 
 chmod 600 /etc/shadow
-echo Shadow file permissions configured
+echo "Shadow file permissions configured"
 
 chmod 600 /etc/passwd
-echo Passwd file permissions configured
+echo "Passwd file permissions configured"
 
 
 chmod 1777 /tmp 
