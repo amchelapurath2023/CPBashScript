@@ -55,12 +55,14 @@ sed -i '160s/.*/PASS_MAX_DAYS\o01130/' /etc/login.defs
 sed -i '161s/.*/PASS_MIN_DAYS\o01110/' /etc/login.defs
 sed -i '162s/.*/PASS_MIN_LEN\o01112/' /etc/login.defs
 sed -i '163s/.*/PASS_WARN_AGE\o0117/' /etc/login.defs
-sed -i ‘279s/.*/ENCRYPT_METHOD\o011SHA512/’ /etc/login.defs
+sed -i '279s/.*/ENCRYPT_METHOD\o011SHA512/' /etc/login.defs
 
 apt-get install libpam-cracklib
 echo > /etc/pam.d/common-password
-echo -e "#As of pam 1.0.1-6, this file is managed by pam-auth-update by default.\n# To take advantage of this, it is recommended that you configure any\n# local modules either before or after the default block, and use\n# pam-auth-update to manage selection of other modules.  See\n# pam-auth-update(8) for details.\n\n# here are the per-package modules (the "Primary" block)\npassword        requisite                       pam_cracklib.so retry=3 remember=5 minlen=12 difok=3 ucredit=1 lcredit=1 dcredit=1 ocredit=1\npassword        [success=1 default=ignore]      pam_unix.so obscure use_authtok try_first_pass sha512\n# here's the fallback if no module succeeds\npassword        requisite                       pam_deny.so\n# prime the stack with a positive return value if there isn't one already;\n# this avoids us returning an error just because nothing sets a success code\n# since the modules above will each just jump around\npassword        required                        pam_permit.so\n# and here are more per-package modules (the "Additional" block)\npassword        optional        pam_gnome_keyring.so\n# end of pam-auth-update config" >> /etc/pam.d/common-password
+echo -e "# As of pam 1.0.1-6, this file is managed by pam-auth-update by default.\n# To take advantage of this, it is recommended that you configure any\n# local modules either before or after the default block, and use\n# pam-auth-update to manage selection of other modules.  See\n# pam-auth-update(8) for details.\n\n# here are the per-package modules (the \"Primary\" block)\npassword        requisite                       pam_cracklib.so retry=3 remember=5 minlen=12 difok=3 ucredit=1 lcredit=1 dcredit=1 ocredit=1\npassword        [success=1 default=ignore]      pam_unix.so obscure use_authtok try_first_pass sha512\n# here's the fallback if no module succeeds\npassword        requisite                       pam_deny.so\n# prime the stack with a positive return value if there isn't one already;\n# this avoids us returning an error just because nothing sets a success code\n# since the modules above will each just jump around\npassword        required                        pam_permit.so\n# and here are more per-package modules (the \"Additional\" block)\npassword        optional        pam_gnome_keyring.so\n# end of pam-auth-update config" >> /etc/pam.d/common-password
 
+echo > /etc/pam.d/common-auth
+echo -e "#\n# /etc/pam.d/common-auth - authentication settings common to all services\n#\n# This file is included from other service-specific PAM config files,\n# and should contain a list of the authentication modules that define\n# the central authentication scheme for use on the system\n# (e.g., /etc/shadow, LDAP, Kerberos, etc.).  The default is to use the\n# traditional Unix authentication mechanisms.\n#\n# As of pam 1.0.1-6, this file is managed by pam-auth-update by default.\n# To take advantage of this, it is recommended that you configure any\n# local modules either before or after the default block, and use\n# pam-auth-update to manage selection of other modules.  See\n# pam-auth-update(8) for details.\n\n# here are the per-package modules (the \"Primary\" block)\nauth    [success=1 default=ignore]      pam_unix.so nullok_secure\n# here's the fallback if no module succeeds\nauth    requisite                       pam_deny.so\n# prime the stack with a positive return value if there isn't one already;\n# this avoids us returning an error just because nothing sets a success code\n# since the modules above will each just jump around\nauth    required                        pam_permit.so\n# and here are more per-package modules (the \"Additional\" block)\nauth    optional                        pam_cap.so\n# end of pam-auth-update config\nauth required pam_tally2.so deny=5 onerr=fail unlock_time=1800" >> /etc/pam.d/common-auth
 
 sleep 30
 echo > /etc/sysctl.conf
@@ -209,9 +211,12 @@ printf 'y' |sudo apt autoremove
 printf 'y' |sudo apt update
 
 journalctl | grep “Execute Disable”
-#apt-get install -y clamav 
-#freshclam update
-#clamscan -r / | grep FOUND >> ClamResults.txt
+apt-get install -y clamav 
+freshclam update
+clamscan -r /home | grep FOUND >> ClamResults.txt
+clamscan -r /etc | grep FOUND >> ClamResults.txt
+clamscan -r /opt | grep FOUND >> ClamResults.txt
+clamscan -r /var | grep FOUND >> ClamResults.txt
 
 find /home -iname “*.txt” -print > EverybodyTextFiles.txt
 find /home -iname “*.pdf” -print > EverybodyPDFFiles.txt
