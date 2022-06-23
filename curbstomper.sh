@@ -221,6 +221,8 @@ find /home -iname “*.txt” -print > EverybodyTextFiles.txt
 find /home -iname “*.pdf” -print > EverybodyPDFFiles.txt
 find /home -iname “*.docx” -print > EverybodyDocFiles.txt
 find / -type d \( -perm -g+w -or -perm -o+w \) -exec ls -adl {} \; >> WriteableFiles.txt
+find / -iname ".*" -print > HiddenFiles.txt
+
 
 
 dpkg -l > packagelist.txt
