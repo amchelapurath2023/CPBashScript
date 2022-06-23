@@ -283,8 +283,8 @@ mkdir /home/backups
 
 #sleep 60
 
-#Echo allow-guest=false >> /etc/lightdm/users.conf
-#Echo greeter-show-remote-login=false >> /etc/lightdm/users.conf
+#echo allow-guest=false >> /etc/lightdm/users.conf
+#echo greeter-show-remote-login=false >> /etc/lightdm/users.conf
 
 
 		
