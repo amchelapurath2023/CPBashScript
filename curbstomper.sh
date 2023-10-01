@@ -264,13 +264,13 @@ mkdir /home/backups
         #ask if the user needs to be a user or admin
         admins=()
         for i in ${!users[@]}; do
-          printf "Do u wish to curb stomp ${users[$i]}: "
+          printf "Do u wish to remove ${users[$i]}: "
           read answer
           if [ $answer == 'y' ];
           then
             userdel ${users[i]}
-            echo "Casey used ginger"
-            echo "${users[$i]} died"
+            echo ""
+            echo "${users[$i]} removed"
           else
             echo -e "$PASS\n$PASS" | passwd ${users[$i]}
             printf "What is this users power level: "
@@ -279,9 +279,9 @@ mkdir /home/backups
             if [ $answer == 'a' ];
             then
               admins+="${users[$i]},"
-              echo "${users[$i]} is now a fucking god"
+              echo "${users[$i]} is now a admin"
             else
-              echo "${users[$i]} is now a useless user"
+              echo "${users[$i]} is now a regular user"
             fi
           fi
         done
